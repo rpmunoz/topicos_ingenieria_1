@@ -3,7 +3,7 @@ Sys.setlocale("LC_ALL", 'en_US.UTF-8')
 
 library(dplyr)
 
-file="data/chile_demographic.csv"
+file="https://raw.githubusercontent.com/rpmunoz/topicos_ingenieria_1/master/clase_3/data/chile_demographic.csv"
 
 chile = read.csv(file)
 

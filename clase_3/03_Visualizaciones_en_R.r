@@ -6,7 +6,7 @@ library(ggplot2)
 
 options(repr.plot.width = 6, repr.plot.height = 4.5)
 
-file="data/chile_demographic.csv"
+file="https://raw.githubusercontent.com/rpmunoz/topicos_ingenieria_1/master/clase_3/data/chile_demographic.csv"
 chile = read.csv(file)
 
 head(chile)
