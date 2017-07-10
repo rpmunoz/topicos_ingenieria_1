@@ -1,3 +1,10 @@
+# Curso "Topicos de Especializacion 1"
+# Prueba 1
+# Fecha: 10-07-2017
+
+# Escriba su nombre en la siguiente linea
+# Nombre: 
+
 #En caso de usar un Mac, ejecute 
 Sys.setlocale("LC_ALL", 'en_US.UTF-8')
 
