@@ -47,6 +47,9 @@ trabajo=read.csv(file, fileEncoding="UTF-8")
 # 1. Haga un gráfico de caja usando el Año en eje X y Tasa.desempleo en el eje Y. Deberían
 # aparecer 8 cajas.
 
+trabajo$Año <- factor(trabajo$Año)
+trabajo$Mes <- factor(trabajo$Mes, levels = unique(trabajo$Mes))
+
 # 2. Haga un gráfico de barras usando la Fecha en el eje X y Tasa.desempleo en el eje Y.
 # Puede usar la siguiente función para rotar las etiquetas del eje X y hacer
 # theme(axis.text.x = element_text(angle = 90, hjust = 1))
@@ -67,10 +70,10 @@ trabajo=read.csv(file, fileEncoding="UTF-8")
 # En caso de querer ordernar los Meses de la leyenda use el siguiente comando
 # trabajo$Mes <- factor(trabajo$Mes, levels = unique(trabajo$Mes))
 
-# 6. Use el comando group_by para calcular la tasa de desempleo promedio por año. Guarde este dataframe
-# como trabajo_anual
+# 6. Use el comando group_by para calcular la tasa de desempleo promedio por año. Llame a esta columna Desempleo.promedio.
+# Guarde este dataframe como trabajo_anual
 
 # 7. Use el dataframe trabajo_anual y haga un gráfico de barras usando Año en el eje X y Tasa de desempleo
 # promedio en el eje Y
 
-# 8. Use el dataframe trabajo_anual y Haga un gráfico de puntos usando la Fecha en el eje X y Tasa.desempleo en el eje Y
+# 8. Use el dataframe trabajo_anual y Haga un gráfico de puntos usando Año en el eje X y Desempleo.promedio en el eje Y
