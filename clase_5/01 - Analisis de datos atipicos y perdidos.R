@@ -8,18 +8,19 @@ Sys.setlocale("LC_ALL", 'Spanish_Chile.1252')
 library(ggplot2)
 library(dplyr)
 
-file="https://raw.githubusercontent.com/rpmunoz/topicos_ingenieria_1/master/clase_5/data/INE_situacion_fuerza_de_trabajo_missing.csv"
-trabajo=read.csv(file, fileEncoding="UTF-8")
+url="https://raw.githubusercontent.com/rpmunoz/topicos_ingenieria_1/master/clase_5/data/INE_situacion_fuerza_de_trabajo_missing.csv"
+trabajo=read.csv(url, fileEncoding="UTF-8")
 
 head(trabajo)
 
 summary(trabajo)
+View(trabajo)
 
 trabajo$Fecha
 trabajo$Fuerza.de.trabajo
 trabajo$Desocupados.total
 
-View(trabajo)
+
 
 ind <- which( trabajo$Fecha == '' )
 ind
