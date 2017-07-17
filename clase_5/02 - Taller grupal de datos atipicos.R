@@ -20,6 +20,7 @@ library(dplyr)
 # Leer archivo desde la web
 url <- "https://raw.githubusercontent.com/rpmunoz/topicos_ingenieria_1/master/clase_5/data/INE_situacion_fuerza_de_trabajo_missing.csv"
 trabajo <- read.csv(url, fileEncoding="UTF-8")
+View(trabajo)
 
 trabajo$Año <- factor(trabajo$Año)
 trabajo$Mes <- factor(trabajo$Mes, levels = unique(trabajo$Mes))
@@ -44,6 +45,27 @@ ggplot(trabajo, aes(x=Mes, y=Desocupados.total, group=Año, color=Año)) +
 # 2. Corrija los valos perdidos de las columnas Fecha, Año y Mes de manera manual.
 
 # 3. Analice las columnas Fuerza.de.trabajo y Desocupados.total y cree un modelo lineal de los datos
-# usando la columna Fecha en el eje X. Puede usar Polinomios o Splines.
+# usando la columna Fecha en el eje X. Puede usar Polinomios o Splines. Grafique sus resultados
 
-# 4. Inditifique los valores atípicos
+# 4. Inditifique los valores atípicos de las columnas Fuerza.de.trabajo y Desocupados.total.
+# Reemplace estos valores por NA y vuelva a construir los modelos
+
+# 5. Use los modelos anteriormente construidos y complete todos los valores perdidos y outliers
+# del dataframe trabajo usando la función predict de R
+
+# Actividad 2
+# -----------
+
+# 1. Una vez reparadao el dataframe trabajo, cree una nueva columna llamada Tasa.desempleo que corresponda
+# a la división entre las columnas Desocupados.total y Fuerza.de.trabajo
+
+# 2. Cree un modelo que permita predecir la columna Tasa.desempleo como función de la Fecha. Use este modelo
+# para predecir la tasa de desempleo para los meses de Marzo y Abril del 2017.
+
+# 3. Use el archivo publicado por el Instituto Nacional de estadísticas y compare la estimación que usted hizo
+# Marzo y Abril del 2017 con los valores reales. Use las dos siguientes líneas para recuperar los valores reales.
+url_ine <- "https://raw.githubusercontent.com/rpmunoz/topicos_ingenieria_1/master/prueba_1/data/INE_situacion_fuerza_de_trabajo.csv"
+trabajo_ine <- read.csv(url_ine, fileEncoding="UTF-8")
+
+# 4. Realice un análisis exploratorio de este dataset y construya al menos dos gráficos distintos,
+# distinto a los ya hechos en este taller, que permitan entender el comportamiento de los datos
