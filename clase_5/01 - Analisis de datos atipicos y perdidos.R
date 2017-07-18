@@ -38,7 +38,7 @@ summary(trabajo)
 # 1. Usar funciones simples para determinar el procentaje de los valores perdidos en cada columna
 
 # Creamos la funcion pMiss para determinar el porcentaje de valores perdidos respecto al total
-pMiss <- function(x){ round(sum(is.na(x))/length(x)*100, digits=2) }
+pMiss <- function(x) { round(sum(is.na(x))/length(x)*100, digits=2) }
 apply(trabajo,2,pMiss)
 
 # 1.1 Analizamos la columna Fecha
@@ -158,13 +158,11 @@ plot1 <- ggplot(data=trabajo, aes(x=Fecha, y=Fuerza.de.trabajo)) +
 plot2 <- plot1 + geom_line(data=trabajo, aes(x=Fecha, y=Fuerza.de.trabajo.predict), linetype="dashed", color="red")
 plot2
 
-
-
 # 2. Usar la librería VIM para visualizar y corregir los valores perdidos
 
 # Instalamos la libreria VIM: Visualization and Imputation of Missing Values
-install.packages('VIM')
-install.packages('VIMGUI')
+#install.packages('VIM')
+#install.packages('VIMGUI')
 
 library(VIM)
 aggr_plot <- aggr(trabajo, col=c('navyblue','red'), numbers=TRUE, sortVars=TRUE,

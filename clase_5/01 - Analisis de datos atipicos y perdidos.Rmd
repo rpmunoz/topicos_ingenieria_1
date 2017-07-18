@@ -1,0 +1,273 @@
+---
+title: "Análisis de datos atipicos y perdidos"
+subtitle: "Autor: Roberto Muñoz, PhD"
+author:
+name: Roberto Muñoz
+affiliation: Centro de I+D de MetricArts
+output:
+  html_document: default
+  html_notebook: default
+---
+
+En caso de usar un Mac, ejecute 
+```{r}
+Sys.setlocale("LC_ALL", 'en_US.UTF-8')
+```
+
+En caso de usar Windows, ejecute
+```{r}
+Sys.setlocale("LC_ALL", 'Spanish_Chile.1252')
+```
+
+Cargamos las librerias ggplot2 y dplyr
+```{r}
+library(ggplot2)
+library(dplyr)
+```
+
+## Para este taller usaremos un conjunto de datos de empleabilidad en Chile. Estos datos fueron obtenidos de la página web del Instituto Nacional de Estadísticas (INE) y posteriormente modificados para cumplir el objetivo de esta clase
+
+Leer archivo desde la web
+```{r}
+url <- "https://raw.githubusercontent.com/rpmunoz/topicos_ingenieria_1/master/clase_5/data/INE_situacion_fuerza_de_trabajo_missing.csv"
+trabajo <- read.csv(url, fileEncoding="UTF-8")
+trabajo_orig <- trabajo
+```
+
+Encabezado del dataframe
+```{r}
+head(trabajo)
+```
+
+Resumen y visualización de datos usando la función View()
+```{r}
+summary(trabajo)
+View(trabajo)
+```
+
+Revisar columna Fecha y notar que aparecen celdas con contenido vacío Notar la frase "85 Levels" al final. Significa que R considero esta columna como varible cualitativa y creó etiquetas
+```{r}
+trabajo$Fecha
+class(trabajo$Fecha)
+```
+
+Primero notamos que las reconoce como etiquetas y que no las cosidera commo fechas
+```{r}
+trabajo$Fecha <- as.Date(trabajo$Fecha, "%Y-%m-%d")
+class(trabajo$Fecha)
+```
+
+## Existen múltiples maneras de identificar y corregir valores perdidos
+
+**1. Usar funciones simples para determinar el procentaje de los valores perdidos en cada columna**
+
+Creamos la funcion pMiss para determinar el porcentaje de valores perdidos respecto al total
+```{r}
+pMiss <- function(x) { round(sum(is.na(x))/length(x)*100, digits=2) }
+apply(trabajo,2,pMiss)
+```
+
+**1.1 Analizamos la columna Fecha**
+Buscamos las Fechas que contienen valores NA, los cuales corresponden a valores perdidos
+```{r}
+ind <- which( is.na(trabajo$Fecha) )
+ind
+trabajo[ind,'Fecha']
+```
+
+Hacemos reemplazo manual de los valores de Fecha
+```{r}
+trabajo[4,'Fecha'] <- "2010-04-01"
+trabajo[33,'Fecha'] <- "2012-09-01"
+trabajo[50,'Fecha'] <- "2014-02-01"
+trabajo[67,'Fecha'] <- "2015-07-01"
+```
+
+**1.2 Analizamos la columna Fuerza.de.trabajo**
+
+Buscas los valores de Fuerza.de.trabajo que contienen valores NA
+```{r}
+summary(trabajo$Fuerza.de.trabajo)
+
+ind <- which( is.na(trabajo$Fuerza.de.trabajo) )
+ind
+trabajo[ind,'Fuerza.de.trabajo']
+```
+
+¿Es posible reemplazar los valores así de fácil como lo hicimos con Fecha?
+
+**A)** Una laternativa es simplemente reemplazar esos valores NA con el promedio o mediana de la columna
+```{r}
+trabajo$Fuerza.de.trabajo <- trabajo_orig$Fuerza.de.trabajo
+```
+
+Veamos que resultado obtenemos al calcular el promedio de la columna Fuerza.de.trabajo
+```{r}
+mean(trabajo$Fuerza.de.trabajo)
+```
+
+Entrega NA pues la función mean por defecto entrega NA cuando un valor tiene NA
+```{r}
+mean(trabajo$Fuerza.de.trabajo, na.rm=TRUE)
+```
+
+Reemplazar los valores usando el promedio
+```{r}
+trabajo[ind,'Fuerza.de.trabajo'] <- mean(trabajo$Fuerza.de.trabajo, na.rm=TRUE)
+summary(trabajo$Fuerza.de.trabajo)
+```
+
+**B)** Otra alternativa es construir un modelo y reemplazar valores ausentes por la predicción
+```{r}
+trabajo$Fuerza.de.trabajo <- trabajo_orig$Fuerza.de.trabajo
+```
+
+Hacemos un gráfico de línea usando Fecha y Fuerza.de.trabajo
+```{r}
+plot1 <- ggplot(data=trabajo, aes(x=Fecha, y=Fuerza.de.trabajo)) +
+  geom_line() +
+  theme(axis.text.x = element_text(angle=90, hjust=1))
+plot1
+```
+
+Usamos la función lm() para construir un modelo lineal
+```{r}
+lmfit <- lm(Fuerza.de.trabajo ~ Fecha, data=trabajo)
+```
+
+Otra manera de usar lm() es escribir explicitamente las columnas
+```{r}
+lmfit <- lm(trabajo$Fuerza.de.trabajo ~ ., data = subset(trabajo, select=Fecha))
+```
+
+Usamos la función predict() para predecir los valores de Fuerza.de.trabajo usando el modelo
+```{r}
+trabajo$Fuerza.de.trabajo.predict <- predict(lmfit, newdata=trabajo)
+
+plot1 + geom_line(data=trabajo, aes(x=Fecha, y=Fuerza.de.trabajo.predict), linetype="dashed", color="red")
+```
+
+Es importante destacar que ggplot incorpora la función geom_smooth() para graficar rápidamente un modelo
+```{r}
+ggplot(data=trabajo, aes(x=Fecha, y=Fuerza.de.trabajo)) +
+  geom_line() +
+  geom_smooth(method = "lm", linetype="dashed", color="red", se = FALSE)
+  theme(axis.text.x = element_text(angle=90, hjust=1))
+```
+  
+Una pregunta que surge al construir modelos ¿Cuán correcto es el ajuste del modelo y = a + b*x?
+```{r}
+summary(lmfit)
+```
+
+Podriamos usar un polinomio de grado 3 
+```{r}
+lmfit <- lm(Fuerza.de.trabajo ~ poly(Fecha,3), data=trabajo)
+summary(lmfit)
+```
+
+Usamos la función predict() y graficamos
+```{r}
+trabajo$Fuerza.de.trabajo.predict <- predict(lmfit, newdata=trabajo)
+plot1 + geom_line(data=trabajo, aes(x=Fecha, y=Fuerza.de.trabajo.predict), linetype="dashed", color="red")
+```
+
+En análisis de datos es común usar splines, las cuales son curvas diferenciables definidas en porciones mediante polinomios. Cargamos la librería splines
+```{r}
+library(splines)
+```
+
+El spline cúbico (k=3) es el spline más simple. Se usa la función ns()
+```{r}
+splinefit = lm(Fuerza.de.trabajo ~ ns(Fecha, knot=median(Fecha)), data=trabajo)
+
+trabajo$Fuerza.de.trabajo.predict <- predict(splinefit, newdata=trabajo)
+plot2 <- plot1 + geom_line(data=trabajo, aes(x=Fecha, y=Fuerza.de.trabajo.predict), linetype="dashed", color="red")
+plot2
+```
+
+También es posible construir splines de grado arbitrario. En este caso usamos grado 5.
+```{r}
+splinefit = lm(Fuerza.de.trabajo ~ bs(Fecha, df=5), data=trabajo)
+
+trabajo$Fuerza.de.trabajo.predict <- predict(splinefit, newdata=trabajo)
+plot2 <- plot1 + geom_line(data=trabajo, aes(x=Fecha, y=Fuerza.de.trabajo.predict), linetype="dashed", color="red")
+plot2
+```
+
+Cuando el modelo sea satisfactorio, entonces reemplazamos los valores NA de Fuerza.de.trabajo usando la columna predict
+```{r}
+trabajo[ind,'Fuerza.de.trabajo'] <- trabajo[ind,'Fuerza.de.trabajo.predict']
+```
+
+**1.3 Durante el análisis de los valores ausentes de la columna Fuerza.de.trabajo pudimos notar que existen dos valores atípicos**
+
+Una manera de determinarlos es usando el modelo que construimos y buscando todos los puntos cuyos residuos estén a una distancia mayor a 3 veces a la media cuadrática
+```{r}
+rms <- sqrt( sum(resid(splinefit)^2)/(length(resid(splinefit))) )
+ind <- which(abs(trabajo$Fuerza.de.trabajo - trabajo$Fuerza.de.trabajo.predict) > 3*rms)
+ind
+trabajo[ind,'Fuerza.de.trabajo']
+```
+
+Graficamos los valores que identificamos com atípicos
+```{r}
+plot3 <- plot2 + geom_point(data=trabajo[ind,], aes(x=Fecha, y=Fuerza.de.trabajo), color="Blue")
+plot3
+```
+
+Es posible que estos valores atípicos afecten los modelos y por ende los resultados del análisis. Comúnmente estos valores atípicos se eliminan en el proceso de construcción del modelo
+```{r}
+trabajo$Fuerza.de.trabajo <- trabajo_orig$Fuerza.de.trabajo
+trabajo[ind,'Fuerza.de.trabajo']=NA
+```
+
+Volvemos a construir un modelos usando splines de grado 5
+```{r}
+splinefit <- lm(Fuerza.de.trabajo ~ bs(Fecha, df=5), data=trabajo)
+summary(splinefit)
+```
+
+Volvemos a graficar las observaciones y el modelo
+```{r}
+trabajo$Fuerza.de.trabajo.predict <- predict(splinefit, newdata=trabajo)
+plot1 <- ggplot(data=trabajo, aes(x=Fecha, y=Fuerza.de.trabajo)) +
+  geom_line() +
+  theme(axis.text.x = element_text(angle=90, hjust=1))
+plot2 <- plot1 + geom_line(data=trabajo, aes(x=Fecha, y=Fuerza.de.trabajo.predict), linetype="dashed", color="red")
+plot2
+```
+
+Una manera para corregir los valores perdidos de un conjunto de datos consiste en usar la predicción del modelo
+```{r}
+ind <- which(is.na(trabajo$Fuerza.de.trabajo))
+ind
+trabajo[ind,'Fuerza.de.trabajo'] <- trabajo[ind,'Fuerza.de.trabajo.predict']
+```
+
+Volvemos a graficar las observaciones y el modelo
+```{r}
+plot1 <- ggplot(data=trabajo, aes(x=Fecha, y=Fuerza.de.trabajo)) +
+  geom_line() +
+  theme(axis.text.x = element_text(angle=90, hjust=1))
+plot2 <- plot1 + geom_line(data=trabajo, aes(x=Fecha, y=Fuerza.de.trabajo.predict), linetype="dashed", color="red")
+plot2
+```
+
+**2. Usar la librería VIM para visualizar y corregir los valores perdidos**
+
+Instalamos la libreria VIM: Visualization and Imputation of Missing Values
+```{r}
+#install.packages('VIM')
+#install.packages('VIMGUI')
+```
+
+Creamos una visualización gráfica de valores perdidos usando VIM
+```{r}
+library(VIM)
+aggr_plot <- aggr(trabajo, col=c('navyblue','red'), numbers=TRUE, sortVars=TRUE,
+                  labels=names(trabajo), cex.axis=.7, gap=3, ylab=c("Histograma de valores perdidos","Patrón"))
+```
+
+
+
