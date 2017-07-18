@@ -1,12 +1,10 @@
 ---
 title: "Análisis de datos atipicos y perdidos"
-author: ''
-name: Roberto Muñoz
+author: 'Roberto Muñoz'
+affiliation: Centro de I+D de MetricArts
 output:
   html_document: default
   html_notebook: default
-subtitle: 'Autor: Roberto Muñoz, PhD'
-affiliation: Centro de I+D de MetricArts
 ---
 
 En caso de usar un Mac, ejecute 
