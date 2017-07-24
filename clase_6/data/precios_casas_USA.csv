@@ -1,0 +1,84 @@
+"area_m2","precio","ciudad","habitaciones","baños"
+315.1,135600000,"Dublin",3,2.1
+380.9,359960000,"pleasanton",4,3
+297.3,179456400,"Clayton",5,4
+133.4,95999600,"Moraga",4,3
+180.6,1.51e+08,"Antioch",3,2
+139.4,119960000,"Danville",3,2.5
+157.9,1.06e+08,"El Dorado Hills",4,3
+232.9,179600000,"Shingle Springs",4,3
+146.8,175980000,"McKinleyville",3,2
+139.4,279955200,"Marina",4,2
+251.3,5e+08,"Roseville",3,2
+159.3,175600000,"Rocklin",4,3
+274.2,311960000,"Folsom",3,3
+102.2,6e+07,"Elk Grove",5,3
+157.9,91800000,"Central San Francisco",3,2
+291.2,2.8e+08,"Central San Francisco",2,1
+245.3,339600000,"Tracy",5,3
+100,35960000,"Redwood City",3,2
+279.8,255600000,"Redwood City",3,2.5
+228,151600000,"Saratoga",5,3
+291.2,255999600,"Morgan Hill",5,3
+99.1,227600000,"Mountain View",2,1
+76.6,319600000,"Benicia",3,2
+134.3,1.32e+08,"Rohnert Park City",4,3.1
+246.4,2.54e+08,"modesto",3,1
+92.9,1.5e+08,"modesto",3,2
+185.1,199980000,"Salida",3,2.5
+83,71600000,"Oxnard",2,1
+91.9,7.2e+07,"Oxnard",2,1.5
+103.8,9.6e+07,"Oxnard",3,1.75
+204.7,163200000,"Oxnard",4,2.5
+114.3,139960000,"Camarillo",3,2
+156.6,151200000,"Camarillo",4,2.5
+182.6,175600000,"Camarillo",5,2
+108.7,9e+07,"Santa Cruz",2,2
+264.4,5e+08,"Santa Cruz",4,3
+241.5,359600000,"Santa Cruz",4,4
+199.7,399600000,"Montecito",3,2
+239.9,439600000,"Goleta",5,3
+145,2.6e+08,"Goleta",3,2
+132.3,53960000,"Carpinteria",2,2
+114.7,79980000,"Carpinteria",3,2
+348.4,5e+08,"San Luis Obispo",4,3.75
+185.8,359200000,"San Luis Obispo",2,1.75
+130.1,101160000,"Paso Robles",3,2
+167.2,114760000,"Paso Robles",4,2
+167.2,143600000,"Atascadero",3,2
+92.9,151600000,"Morro Bay",2,1
+293.6,307600000,"Cambria",3,4
+104.2,73960000,"La Mirada",3,2
+161.9,9.4e+07,"La Mirada",4,2
+353,2.6e+08,"La Mirada",5,5
+70.2,140800000,"Redondo Beach",2,1
+145,8.2e+07,"Chino",4,2.5
+130.1,83960000,"Chino",3,2
+225.2,1.15e+08,"Chino",4,3
+121.4,9.8e+07,"Santa Clarita",3,2
+165,131999600,"Santa Clarita",4,2.5
+252.8,178396000,"Santa Clarita",5,3
+349.9,316800000,"Santa Clarita",4,3
+278.7,189960000,"Lake Forest",6,4
+358,255600000,"Lake Forest",4,2.5
+260.1,335600000,"Seal Beach",5,3
+353,379900000,"Seal Beach",6,5.5
+138.6,187960000,"Seal Beach",3,2
+140.5,139600000,"Tustin",2,1.5
+148.4,159600000,"Costa Mesa",3,2
+104.4,6e+07,"Corona",3,1
+195.1,113960000,"Corona",5,3
+169.8,1.14e+08,"Corona",4,2
+314.5,2.26e+08,"Corona",5,3
+156.1,55960000,"Canyon Lake",3,2
+314.9,1.25e+08,"Canyon Lake",5,3
+343.2,319600000,"Carmel Valley",5,4.5
+161.2,2.1e+08,"Carmel Valley",3,2
+353,4.6e+08,"Carmel Valley",4,3
+139.4,171600000,"Carmel Valley",2,1.5
+89.1,91600000,"Clairmont",1,1.5
+408.8,319600000,"Clairmont",5,2.5
+148.6,1.84e+08,"Clairmont",4,2.5
+125.1,8.6e+07,"Oceanside",2,2
+200.1,1.3e+08,"Oceanside",4,2.5
+248,279600000,"Oceanside",5,3

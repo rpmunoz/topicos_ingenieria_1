@@ -18,7 +18,7 @@ library(ggplot2)
 library(dplyr)
 
 # Leer archivo desde la web
-url <- "https://raw.githubusercontent.com/rpmunoz/topicos_ingenieria_1/master/clase_5/data/INE_situacion_fuerza_de_trabajo_missing.csv"
+url <- "https://raw.githubusercontent.com/rpmunoz/topicos_ingenieria_1/master/clase_6/data/INE_situacion_fuerza_de_trabajo_missing.csv"
 trabajo <- read.csv(url, fileEncoding="UTF-8")
 View(trabajo)
 
