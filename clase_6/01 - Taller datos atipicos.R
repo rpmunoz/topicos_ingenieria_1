@@ -66,6 +66,3 @@ ggplot(trabajo, aes(x=Mes, y=Desocupados.total, group=Año, color=Año)) +
 # Marzo y Abril del 2017 con los valores reales. Use las dos siguientes líneas para recuperar los valores reales.
 url_ine <- "https://raw.githubusercontent.com/rpmunoz/topicos_ingenieria_1/master/prueba_1/data/INE_situacion_fuerza_de_trabajo.csv"
 trabajo_ine <- read.csv(url_ine, fileEncoding="UTF-8")
-
-# 4. Realice un análisis exploratorio de este dataset y construya al menos dos gráficos distintos,
-# distinto a los ya hechos en este taller, que permitan entender el comportamiento de los datos
