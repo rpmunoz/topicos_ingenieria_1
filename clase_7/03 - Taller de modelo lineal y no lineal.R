@@ -40,4 +40,3 @@ plot1
 
 # Construya un modelo no lineal para predecir el valor de la población usando el año.
 # Siga el ejemplo del modelo no linea basado en el modelo de logistic growth
-

@@ -98,7 +98,7 @@ summary(mfit)
 # tiende el sistema con un año muy grande. Es por ello que usaremos el maximo de la población
 # como valor de theta1 
 
-theta1.start=2*max(censo$poblacion)
+theta1.start=1.5*max(censo$poblacion)
 
 # Para determinar valores iniciales de los otros dos parámetros, una manera es despejando los
 # valores de theta1 hacia la izquierda y dejando solamente theta2 y theta3 a la derech
@@ -108,10 +108,10 @@ theta1.start=2*max(censo$poblacion)
 
 lm(logit(poblacion/theta1.start) ~ año, censo)
 
-theta2.start=-39.03589
-theta3.start=0.01939 
+theta2.start=-42
+theta3.start=0.021
 
-mfit <- nls(poblacion ~ theta1/(1 + exp(-(theta2 + theta3*año))), start=list(theta1=theta1.start, theta2=theta2.start, theta3=theta3.start), data=censo, trace=TRUE, control = list(maxiter = 500))
+mfit <- nls(poblacion ~ theta1/(1 + exp(-(theta2 + theta3*año))), start=list(theta1=theta1.start, theta2=theta2.start, theta3=theta3.start), data=censo, trace=TRUE, control = list(maxiter = 50))
 summary(mfit)
 
    
