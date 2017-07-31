@@ -1,6 +1,6 @@
 # Curso "Topicos de Especializacion 1"
 # Taller 2
-# Fecha: 17-07-2017
+# Fecha: 31-07-2017
 
 # Escriba los nombres de los integrantes en el siguiente bloque
 # Integrante 1: 
@@ -18,7 +18,7 @@ library(ggplot2)
 library(dplyr)
 
 # Leer archivo desde la web
-url <- "https://raw.githubusercontent.com/rpmunoz/topicos_ingenieria_1/master/clase_6/data/precios_casas_USA.csv"
+url <- "https://raw.githubusercontent.com/rpmunoz/topicos_ingenieria_1/master/clase_7/data/precios_casas_USA.csv"
 casas <- read.csv(url, fileEncoding="UTF-8")
 View(casas)
 
@@ -44,18 +44,19 @@ pairs(cbind(precio, area_m2, habitaciones, baÃ±os), lower.panel = panel.cor, pch
 # Actividad 1
 # -----------
 
-# 1. Construya un modelo de regresiÃ³n lineal usando la columna precio como valor dependiente (Y)
+# 1. Construya un modelo de regresión lineal usando la columna precio como valor dependiente (Y)
 # y las siguientes variables como predictoras. Para cada una de las siguiente letras construya
-# un modelo lineal, imprima un resumen del modelo y determine el coeficiente de correlaciÃ³n
+# un modelo lineal, imprima un resumen del modelo y determine el coeficiente de correlación
 #
 # A) Considere solamente la columna area_m2
 # B) Considere solamente la columna habitaciones
-# C) Considera de manera simultÃ¡nea las columnas area_m2 y habitaciones
+# C) Considera de manera simultánea las columnas area_m2 y habitaciones
 
-# 2. De acuerdo a los resultados de la anterior pregunta, determine cuÃ¡l fue el mejor modelo
-# que construyÃ³
+# 2. De acuerdo a los resultados de la anterior pregunta, determine cuál fue el mejor modelo
+# que construyó
 
 # 3. Experimente aplicando operaciones lineales sobre las variables predictoras presentadas en
-# la pregunta 1 y proponga un nuevo modelo lineal
+# la pregunta 1 y proponga un nuevo modelo lineal. Puede crear nuevas columnas o aplicar directamente
+# funciones sobre columnas ya existentes.
 
 

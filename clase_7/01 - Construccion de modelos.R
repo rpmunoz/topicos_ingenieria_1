@@ -9,8 +9,8 @@ library(ggplot2)
 
 # El lenguaje R permite construir modelos matemáticos tanto lineales como no lineales
 
-file = "data/censo_chile.csv"
-censo = read.csv(file, fileEncoding="UTF-8")
+url = "https://raw.githubusercontent.com/rpmunoz/topicos_ingenieria_1/master/clase_7/data/censo_chile.csv"
+censo = read.csv(url, fileEncoding="UTF-8")
 head(censo)
 
 # Hacemos un gráfico de puntos para visualizar los datos
@@ -98,12 +98,20 @@ summary(mfit)
 # tiende el sistema con un año muy grande. Es por ello que usaremos el maximo de la población
 # como valor de theta1 
 
-theta1=max(censo$poblacion)
+theta1.start=2*max(censo$poblacion)
 
 # Para determinar valores iniciales de los otros dos parámetros, una manera es despejando los
 # valores de theta1 hacia la izquierda y dejando solamente theta2 y theta3 a la derech
-# 
+# https://github.com/rpmunoz/topicos_ingenieria_1/blob/master/clase_7/images/equation%20logistic%20growth.png
 
-log( Y/theta1/ (1-Y/theta1) ) ~ theta2 + theta3 * X
+# Ecuación despejada:  log( Y/theta1/ (1-Y/theta1) ) ~ theta2 + theta3 * X
 
-lm(logit(poblacion/400) ˜ year, USPop
+lm(logit(poblacion/theta1.start) ~ año, censo)
+
+theta2.start=-39.03589
+theta3.start=0.01939 
+
+mfit <- nls(poblacion ~ theta1/(1 + exp(-(theta2 + theta3*año))), start=list(theta1=theta1.start, theta2=theta2.start, theta3=theta3.start), data=censo, trace=TRUE, control = list(maxiter = 500))
+summary(mfit)
+
+   
