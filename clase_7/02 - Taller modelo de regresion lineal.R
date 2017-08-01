@@ -5,7 +5,7 @@
 # Escriba los nombres de los integrantes en el siguiente bloque
 # Integrante 1: 
 # Integrante 2: 
-# Integrante 3: 
+# Integrante 3:  
 
 #En caso de usar un Mac, ejecute 
 Sys.setlocale("LC_ALL", 'en_US.UTF-8')
