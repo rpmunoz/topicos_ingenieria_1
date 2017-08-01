@@ -112,6 +112,11 @@ theta2.start=-42
 theta3.start=0.021
 
 mfit <- nls(poblacion ~ theta1/(1 + exp(-(theta2 + theta3*año))), start=list(theta1=theta1.start, theta2=theta2.start, theta3=theta3.start), data=censo, trace=TRUE, control = list(maxiter = 50))
+
+mfit <- nls(poblacion ~ theta1/(1 + exp(-(theta2 + theta3*año))), start=list(theta1=theta1.start, theta2=theta2.start, theta3=theta3.start), data=censo, trace=TRUE, control = list(maxiter = 50), algorithm="port", lower=c(theta1.start/2,-Inf,-Inf), upper=c(theta1.start*10.,Inf, Inf))
 summary(mfit)
+
+censo$poblacion.predict <- predict(mfit, newdata=censo)
+plot1 + geom_line(data=censo, aes(x=año, y=poblacion.predict), linetype="dashed", color="red")
 
    
