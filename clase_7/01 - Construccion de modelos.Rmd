@@ -1,0 +1,176 @@
+---
+title: "Construcción de modelos lineales y no lineales"
+author: "Roberto Muñoz"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: 
+  html_document:
+    toc: true
+    number_sections: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Ajustamos el locale del sistema de acuerdo al OS del computador
+En caso de usar un Mac ejecute la siguiente linea
+```{r}
+Sys.setlocale("LC_ALL", 'en_US.UTF-8')
+```
+
+En caso de usar Windows ejecute la siguiente linea
+```{r}
+Sys.setlocale("LC_ALL", 'Spanish_Chile.1252')
+```
+
+# Cargamos las librerías que usaremos en el script
+```{r}
+library(dplyr)
+library(ggplot2)
+```
+
+# Descargar datos y hacer una visualización simple
+
+```{r}
+url = "https://raw.githubusercontent.com/rpmunoz/topicos_ingenieria_1/master/clase_7/data/censo_chile.csv"
+censo = read.csv(url, fileEncoding="UTF-8")
+head(censo)
+```
+
+Hacemos un gráfico de puntos para visualizar los datos
+```{r}
+plot1 <- ggplot(censo, aes(x=año, y=poblacion)) +
+  geom_point() +
+  theme(axis.text.x = element_text(angle=45, hjust=1))
+plot1
+```
+
+# Construcción de modelos lineales y no lineales en R
+
+El lenguaje R permite construir modelos matemáticos tanto lineales como no lineales.
+
+## MODELO LINEAL - Polinomios
+
+En general, los modelos lineales son los más fáciles de entender y modelar. En R se emplea la función lm() para construir modelos lineales.
+
+Para obtener ayuda acerca de la función lm ejecutamos `help(lm)`
+
+Partimos usando un modelo lineal simple para entender cómo la población del país cambia a lo largo de la historia
+```{r}
+lmfit <- lm(poblacion ~ año, data=censo)
+```
+
+Usamos la función `summary()` para ver los resultados de la regresión lineal
+```{r}
+summary(lmfit)
+```
+
+Usamos el modelo lineal que acabamos de construir y creamos la columna poblacion.predict para almacenar los valores predichos por le modelo
+```{r}
+censo$poblacion.predict <- predict(lmfit, newdata=censo)
+```
+
+Graficamos los datos originales y el modelo lineal
+```{r}
+plot1 + geom_line(data=censo, aes(x=año, y=poblacion.predict), linetype="dashed", color="red")
+```
+
+Podemos ver que el Multiple R-squared es 0.86, lo cual indica que el modelo es bueno pero quizás no es el más óptimo
+
+El `p-value` es mucho menor que 0.05, por lo cual podemos rechazar la hipotesis nula que no existe correlación (\beta=0)
+
+De esta manera, podemos concluir que existe una relación significativa entre las variables de acuerdo al modelo lineal
+
+El Adjusted R-squared toma en cuenta el hecho de agregar más variables al modelo y que el valor de R-squared mejor por simple chance. Se usa el factor (N-1)/(N-k-1) donde
+-N = Número de observaciones
+-k = Número de variables
+
+¿Que tal si construimos un modelo usando un polinomio de grado 2?
+```{r}
+lmfit <- lm(poblacion ~ poly(año,2), data=censo)
+summary(lmfit)
+```
+
+El valor de R^2 mejora notablemente respecto a usar un polinomio de grado 1. Procedemos a visualizar el resultado.
+```{r}
+censo$poblacion.predict <- predict(lmfit, newdata=censo)
+plot1 + geom_line(data=censo, aes(x=año, y=poblacion.predict), linetype="dashed", color="red")
+```
+
+Podemos notar que modelo en general es bueno, pero todavía presenta un *residual standard error* alto.
+
+## MODELO LINEAL - Splines
+
+```{r}
+library(splines)
+```
+
+Las splines son curvas diferenciables definidas en proporciones mediante polinomios. Para el ajuste de curvas, los splines se utilizan para aproximar formas complicadas.
+
+Usaremos la función `bs()`, la cual permite generar una matriz de funciones bases del tipo B-splines. El parámetro `df=` corresponde a los grados de libertad. Más info https://es.wikipedia.org/wiki/B-spline
+
+```{r}
+lmfit <- lm(poblacion ~ bs(año, df=3), data=censo)
+summary(lmfit)
+```
+
+Podemos notar que el modelo construido usando splines de grado 3 es mucho mejor que un polinomio de orden 3
+
+```{r}
+censo$poblacion.predict <- predict(lmfit, newdata=censo)
+plot1 + geom_line(data=censo, aes(x=año, y=poblacion.predict), linetype="dashed", color="red")
+```
+
+Las splines suelen usarse para determinar valores de las variables dependientes (Y) dentro del rango de las variables idenpendientes (X). Suelen diverger y tener una gran varianza en los extermos del rango de X.
+
+## MODELO NO LINEAL
+
+```{r}
+library(car)
+```
+
+A diferencia de los modelos lineales, la mayoría de los modelos no lineales requieren especificar valores inciales para los parámetros del modelo. En caso de querer ver documentación de nls ver `help(nls)`
+
+Partimos usando un polinomio de grado 2 como ecuación de la función `nls()`. Los tres argumentos más importantes son la ecuación, los valores iniciales y el dataframe
+
+```{r}
+mfit <- nls(poblacion ~ theta1 + theta2*año + theta3*año^2, start=list(theta1=5e6, theta2=15e6, theta3=5e6), data=censo)
+summary(mfit)
+```
+
+```{r}
+censo$poblacion.predict <- predict(mfit, newdata=censo)
+plot1 + geom_line(data=censo, aes(x=año, y=poblacion.predict), linetype="dashed", color="red")
+```
+
+Un modelo ampliamente usado para estudiar el crecimiento de poblaciones en ecología corresponde al modelo de crecimiento logístico
+Más info https://en.wikipedia.org/wiki/Logistic_function
+
+$Y = \frac{\theta_1}{(1 + \exp(-(\theta_2 + \theta_3 X))}$
+
+En esta ecuación theta1 se le llama la asíntota, pues es el valor al cual tiende el modelo cuando el año tiende a infinito. Usaremos el valor máximo de la población para definir el valor inicial de theta1 
+```{r}
+theta1.start=10*max(censo$poblacion)
+```
+
+Para determinar valores iniciales de los otros dos parámetros, una manera es despejando los valores de theta1 hacia la izquierda y dejando solamente theta2 y theta3 a la derecha.
+
+Ecuación despejada
+$\log( \frac{Y/\theta_1}{(1-Y/\theta_1)} ) = \theta_2 + \theta_3 X$
+```{r}
+lmfit <- lm(logit(poblacion/theta1.start) ~ año, censo)
+theta2.start=coef(lmfit)[1]
+theta3.start=coef(lmfit)[2]
+```
+
+Llamamos a la función `nls()` para ajustar el modelo no lineal basado en los datos del censo histórico de Chile. Usamos el algoritmo `port` y definimos el rango de valores de los parámetros usando `lower=` y `upper=`.
+```{r}
+mfit <- nls(poblacion ~ theta1/(1 + exp(-(theta2 + theta3*año))), start=list(theta1=theta1.start, theta2=theta2.start, theta3=theta3.start), data=censo, control = list(maxiter = 100), algorithm="port", lower=c(theta1.start/10,-Inf,-Inf), upper=c(theta1.start*10.,Inf, Inf))
+summary(mfit)
+```
+
+Visualizamos el resultado del ajuste no lineal usando el modelo de regresión logística.
+```{r}
+censo$poblacion.predict <- predict(mfit, newdata=censo)
+plot1 + geom_line(data=censo, aes(x=año, y=poblacion.predict), linetype="dashed", color="red")
+```

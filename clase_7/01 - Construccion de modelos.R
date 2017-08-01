@@ -6,6 +6,7 @@ Sys.setlocale("LC_ALL", 'Spanish_Chile.1252')
 
 library(dplyr)
 library(ggplot2)
+library(car)
 
 # El lenguaje R permite construir modelos matemáticos tanto lineales como no lineales
 
@@ -23,7 +24,7 @@ plot1
 
 # En general, los modelos lineales son los más fáciles de entender y modelar.
 # En R se emplea la función lm() para construir modelos lineales.
-help(lm)
+#help(lm)
 
 # Partimos usando un modelo lineal simple para ver como población depende de año
 lmfit = lm(poblacion ~ año, data=censo)
@@ -77,7 +78,7 @@ plot1 + geom_line(data=censo, aes(x=año, y=poblacion.predict), linetype="dashed"
 # A diferencia de los modelos lineales, la mayoría de los modelos no lineales requieren especificar
 # valores inciales para los parámetros del modelo
 
-help(nls)
+#help(nls)
 
 # Partimos usando un polinomio de grado 2 como ecuación de la función nls()
 # Los tres argumentos más importantes son la ecuación, los valores iniciales y el dataframe
@@ -91,14 +92,14 @@ plot1 + geom_line(data=censo, aes(x=año, y=poblacion.predict), linetype="dashed"
 # corresponde al modelo de crecimiento logístico
 #https://en.wikipedia.org/wiki/Logistic_function
 
-mfit <- nls(poblacion ~ theta1/(1 + exp(-(theta2 + theta3*año))), data=censo)
-summary(mfit)
+#mfit <- nls(poblacion ~ theta1/(1 + exp(-(theta2 + theta3*año))), data=censo)
+#summary(mfit)
 
 # En esta ecuación theta1 se le llama la asímtota, y se llama así pues es el valor al cual
 # tiende el sistema con un año muy grande. Es por ello que usaremos el maximo de la población
 # como valor de theta1 
 
-theta1.start=1.5*max(censo$poblacion)
+theta1.start=10*max(censo$poblacion)
 
 # Para determinar valores iniciales de los otros dos parámetros, una manera es despejando los
 # valores de theta1 hacia la izquierda y dejando solamente theta2 y theta3 a la derech
@@ -106,14 +107,13 @@ theta1.start=1.5*max(censo$poblacion)
 
 # Ecuación despejada:  log( Y/theta1/ (1-Y/theta1) ) ~ theta2 + theta3 * X
 
-lm(logit(poblacion/theta1.start) ~ año, censo)
+lmfit <- lm(logit(poblacion/theta1.start) ~ año, censo)
 
-theta2.start=-42
-theta3.start=0.021
+theta2.start=coef(lmfit)[1]
+theta3.start=coef(lmfit)[2]
 
-mfit <- nls(poblacion ~ theta1/(1 + exp(-(theta2 + theta3*año))), start=list(theta1=theta1.start, theta2=theta2.start, theta3=theta3.start), data=censo, trace=TRUE, control = list(maxiter = 50))
-
-mfit <- nls(poblacion ~ theta1/(1 + exp(-(theta2 + theta3*año))), start=list(theta1=theta1.start, theta2=theta2.start, theta3=theta3.start), data=censo, trace=TRUE, control = list(maxiter = 50), algorithm="port", lower=c(theta1.start/2,-Inf,-Inf), upper=c(theta1.start*10.,Inf, Inf))
+#mfit <- nls(poblacion ~ theta1/(1 + exp(-(theta2 + theta3*año))), start=list(theta1=theta1.start, theta2=theta2.start, theta3=theta3.start), data=censo, trace=TRUE, control = list(maxiter = 50))
+mfit <- nls(poblacion ~ theta1/(1 + exp(-(theta2 + theta3*año))), start=list(theta1=theta1.start, theta2=theta2.start, theta3=theta3.start), data=censo, control = list(maxiter = 100), algorithm="port", lower=c(theta1.start/10,-Inf,-Inf), upper=c(theta1.start*10.,Inf, Inf))
 summary(mfit)
 
 censo$poblacion.predict <- predict(mfit, newdata=censo)
