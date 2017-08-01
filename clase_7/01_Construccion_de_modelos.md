@@ -326,7 +326,10 @@ Visualizamos el resultado del ajuste no lineal usando el modelo de regresión lo
 
 ``` r
 censo$poblacion.predict <- predict(mfit, newdata=censo)
-plot1 + geom_line(data=censo, aes(x=año, y=poblacion.predict), linetype="dashed", color="red")
+plot1 +
+  geom_line(data=censo, aes(x=año, y=poblacion.predict), linetype="dashed", color="red") +
+  ggtitle("Análisis de censo nacional de población en Chile", subtitle="Basado en datos históricos recolectados por INE") +
+  theme(plot.title = element_text(hjust = 0.5), plot.subtitle = element_text(hjust = 0.5))
 ```
 
 ![](01_Construccion_de_modelos_files/figure-markdown_github/unnamed-chunk-21-1.png)
