@@ -48,8 +48,41 @@ wssplot <- function(data, nc=15, seed=1234){
   plot(1:nc, wss, type="b", xlab="Número de clusters",
        ylab="Suma desviaciones cuadráticas dentro de grupos")}
 
+# Hacemos gráfico de cómo cambia la suma de desviaciones cuadráticas como función del numero de grupos
 wssplot(vinos.stand, nc=6) 
 
-clusplot(vinos.stand, k.means.fit$cluster, main='2D representation of the Cluster solution',
+# Hacemos un gráfico 2D para visualizar los cluster
+clusplot(vinos.stand, k.means.fit$cluster, main='Representación 2D del clustering',
          color=TRUE, shade=TRUE,
          labels=2, lines=0)
+
+# 
+url <- "https://raw.githubusercontent.com/rpmunoz/topicos_ingenieria_1/master/clase_8/data/vinos_analisis_quimico_tipos.csv"
+vinos_tipos <- read.csv(url, fileEncoding="UTF-8")
+View(vinos_tipos)
+
+table(vinos_tipos[,1],k.means.fit$cluster)
+
+# Clustering jerárquico
+#
+# Se busca construir una jerarquía de grupos. 
+# En general, las mezclas y divisiones son determinadas de forma avara (Que una clase se lleve todo).
+# Los resultados del agrupamiento jerárquico son usualmente presentados en un dendrograma.
+
+# Los métodos jerárquico usan una matriz de distancia como entrada para el algoritmo de clustering.
+# Empleamos una distancia Euclideana
+d <- dist(vinos.stand, method = "euclidean")
+
+# La función hclust() permite hacer análisis de cluster basado en un conjunto de disimilitudes
+# Se puede emplear el criterio de Ward, que consiste en el decrecimiento en la varianza para los grupos que están siendo mezclados
+H.fit <- hclust(d, method="ward.D")
+
+# Hacemos un gráfico del tipo dendograma
+plot(H.fit)
+# Aplicamos una división en 3 grupos
+groups <- cutree(H.fit, k=3)
+# Dibujamos el dendograma con los bordes de color rojo marcando los grupos
+rect.hclust(H.fit, k=3, border="red") 
+
+# Evaluamos la matriz de confusión
+table(vinos_tipos[,1],groups)
