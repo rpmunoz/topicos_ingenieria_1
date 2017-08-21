@@ -22,3 +22,26 @@ library(cluster)
 url <- "https://raw.githubusercontent.com/rpmunoz/topicos_ingenieria_1/master/clase_8/data/redes_sociales_estudiantes_USA.csv"
 estudiantes <- read.csv(url, fileEncoding="UTF-8")
 View(estudiantes)
+
+# Esta tabla contiene información del uso de redes sociales de 30.000 estudiantes de USA
+# Se eligieron las 36 palabras que fueron repetidas multiples veces en las publicaciones
+# Las palabras incluyen football, sexy, kissed, bible, shopping, death, and drugs.
+# El valor de cada columna corresponde al numoer de veces que aparece cada valor
+
+# Actividad 1
+# -----------
+#
+# 1. Determine el número de valores ausentes que existe en cada columna.
+# Elimine cualquier fila (registro) que contenga al menos un valor ausente y reemplace antigua tabla estudiantes
+
+# 2. Aplique la funcion scale() solamente a las columnas basketball hacia adelante (rango de columnas [5:40])
+# Puede usar la función lapply() y también as.data.frame(). Guarde esta matriz de normalizacion como estudiantes.stand
+
+# 3. Use la variable anteriormente calculada estudiantes.stand y haga un análisis de K-means usando la función kmeans()
+
+# 4. Determine el número óptimo de clusters. Justifique su respuesta
+
+# 5. Use la función par() y pie() para hacer gráficos de torta para cada uno de los clusters que identificó anteriormente.
+# Repita cuantas veces quiera la lineas de abajo
+par(mfrow=c(X,Y))
+pie(colSums(interests[teen_clusters$cluster==1,]),cex=0.5)
