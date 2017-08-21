@@ -19,4 +19,11 @@ vinos.stand <- scale(vinos)
 
 # La función kmeans permite hacer análisis de agrupaciones o clustering de datos.
 # El parámetro de input corresponde al número de grupos
+# Guardamos el resultado en la variable k.means.fit
 k.means.fit <- kmeans(vinos.stand, 2)
+
+# Podemos ver los parámetros que contiene la variable k.means.fit
+attributes(k.means.fit)
+
+# El parámetro cluster corresponde al Id único del cluster que se le asigna a cada elemento de la tabla
+k.means.fit$cluster

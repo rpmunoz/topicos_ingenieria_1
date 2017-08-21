@@ -7,6 +7,7 @@ wine <- rename(wine, Tipo=Type, Alcohol=Alcohol, Acido.Malico=Malic, Cenizas=Ash
 wine %>%
   select(-Tipo) -> wine
 
+wine <- wine[sample(nrow(wine)),]
 head(wine)
 
 write.csv(wine, file="~/Downloads/vinos_analisis_quimico.csv", fileEncoding="UTF-8", row.names=FALSE)
