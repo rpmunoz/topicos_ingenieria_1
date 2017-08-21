@@ -36,6 +36,9 @@ View(casas)
 # 3. Determine el número de las casas que se vendieron para cada código postal.
 # Presente el resultado como una tabla o lista y ordene de mayor a menor usando el número de casas.
 
+group_by() %>%
+summarise(n_casas=n()) %>%
+arrange()
 
 # 4. Anote el codigo postal que tenía el mayor número de casas que se vendieron.
 # Use la función filter() de la librería dplyr para seleccionar solo las casas que
