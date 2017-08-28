@@ -21,7 +21,7 @@ vinos.stand <- scale(vinos)
 # La función kmeans permite hacer análisis de agrupaciones o clustering de datos.
 # El parámetro de input, k, corresponde al número de grupos
 # Guardamos el resultado en la variable k.means.fit
-k.means.fit <- kmeans(vinos.stand, 2)
+k.means.fit <- kmeans(vinos.stand, 3)
 
 # Podemos ver los parámetros que contiene la variable k.means.fit
 attributes(k.means.fit)
@@ -82,7 +82,7 @@ plot(H.fit)
 # Aplicamos una división en 3 grupos
 groups <- cutree(H.fit, k=3)
 # Dibujamos el dendograma con los bordes de color rojo marcando los grupos
-rect.hclust(H.fit, k=3, border="red") 
+rect.hclust(H.fit, k=3, border="blue") 
 
 # Evaluamos la matriz de confusión
 table(vinos_tipos[,1],groups)
